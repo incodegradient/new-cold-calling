@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useCampaigns } from '@/hooks/useCampaigns';
@@ -98,6 +98,4 @@ const CreateCampaignWizard = ({ isOpen, onClose }: CreateCampaignWizardProps) =>
   );
 };
 
-// Dummy Stepper for structure
-const React: any = {}; // To avoid ts error on React.Fragment
 export default CreateCampaignWizard;

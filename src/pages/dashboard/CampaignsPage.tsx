@@ -40,7 +40,7 @@ const CampaignsPage = () => {
         </Button>
       </div>
 
-      {error && <p className="mt-4 text-destructive">Error loading campaigns: {error.message}</p>}
+      {error && <p className="mt-4 text-destructive">Error loading campaigns: {error}</p>}
 
       <Card className="mt-6">
         <CardContent className="pt-6">

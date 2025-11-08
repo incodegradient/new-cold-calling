@@ -1,5 +1,3 @@
-import { Agent } from './agents';
-
 export interface Campaign {
   id: string;
   user_id: string;
@@ -20,6 +18,6 @@ export interface Campaign {
   };
   status: 'Draft' | 'Active' | 'Paused' | 'Completed';
   created_at: string;
-  agents?: Agent; // For joins
+  agents?: { name: string }; // For joins
   lead_count?: number; // For aggregated counts
 }

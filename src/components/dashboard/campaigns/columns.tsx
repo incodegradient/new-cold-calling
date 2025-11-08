@@ -2,7 +2,8 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Campaign } from "@/types/campaigns"
 import { Badge } from "@/components/ui/badge"
 import { CampaignActions } from "./CampaignActions"
-import { BotMessageSquare, Users } from "lucide-react"
+import { Users } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export const getCampaignColumns = (onEdit: (campaign: Campaign) => void): ColumnDef<Campaign>[] => [
   {
@@ -13,9 +14,14 @@ export const getCampaignColumns = (onEdit: (campaign: Campaign) => void): Column
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status") as string;
-      // Add color logic here
-      return <Badge variant="outline">{status}</Badge>;
+      const status = row.getValue("status") as Campaign['status'];
+      const statusStyles: Record<Campaign['status'], string> = {
+        Draft: "bg-muted/50 text-muted-foreground border-border",
+        Active: "bg-green-500/20 text-green-700 dark:bg-green-500/10 dark:text-green-400 border-green-300 dark:border-green-700",
+        Paused: "bg-yellow-500/20 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400 border-yellow-300 dark:border-yellow-700",
+        Completed: "bg-blue-500/20 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 border-blue-300 dark:border-blue-700",
+      };
+      return <Badge variant="outline" className={cn(statusStyles[status] || "")}>{status}</Badge>;
     },
   },
   {

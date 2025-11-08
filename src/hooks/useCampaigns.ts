@@ -14,12 +14,23 @@ export const useCampaigns = () => {
     setLoading(true);
     setError(null);
     try {
-      // This RPC function is now created via a migration file.
-      const { data, error } = await supabase
-        .rpc('get_campaigns_with_lead_count', { p_user_id: user.id });
+      const { data: rawData, error } = await supabase
+        .from('campaigns')
+        .select('*, agents(name), campaign_leads(count)')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setCampaigns(data || []);
+
+      const formattedData = rawData?.map(c => {
+        const { campaign_leads, ...rest } = c;
+        return {
+          ...rest,
+          lead_count: Array.isArray(campaign_leads) ? (campaign_leads[0]?.count || 0) : 0,
+        };
+      }) || [];
+
+      setCampaigns(formattedData as Campaign[]);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -31,7 +42,7 @@ export const useCampaigns = () => {
     fetchCampaigns();
   }, [fetchCampaigns]);
 
-  const createCampaign = async (campaignData: Omit<Campaign, 'id' | 'user_id' | 'created_at' | 'status'>, leads: string[], leadGroups: string[]) => {
+  const createCampaign = async (campaignData: Omit<Campaign, 'id' | 'user_id' | 'created_at' | 'status' | 'agents' | 'lead_count'>, leads: string[], leadGroups: string[]) => {
     if (!user) throw new Error("User not authenticated");
 
     // 1. Create the campaign
