@@ -7,6 +7,7 @@ export interface Campaign {
     start_time: string;
     end_time: string;
     weekdays: string[];
+    timezone: string;
   };
   pacing: {
     gap_minutes: number;

@@ -31,6 +31,7 @@ export const serviceDetails: Record<ServiceName, ServiceDetail> = {
     icon: BotMessageSquare,
     fields: [
       { key: 'api_key', label: 'API Key', type: 'password', placeholder: 'Enter your Vapi API key' },
+      { key: 'phone_number_id', label: 'Vapi Phone Number ID', type: 'text', placeholder: 'Enter your Vapi Phone Number ID' },
     ],
   },
   retell: {

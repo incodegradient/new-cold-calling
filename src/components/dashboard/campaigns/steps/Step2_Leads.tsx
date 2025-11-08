@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -9,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable } from '@/components/ui/data-table';
 import { getLeadColumns } from '../../leads/columns';
+import { RowSelectionState } from '@tanstack/react-table';
 
 interface Step2LeadsProps {
   onNext: (data: any) => void;
@@ -19,10 +19,30 @@ interface Step2LeadsProps {
 const Step2Leads = ({ onNext, onBack, initialData }: Step2LeadsProps) => {
   const { leads, loading: leadsLoading } = useLeads();
   const { leadGroups, loading: groupsLoading } = useLeadGroups();
-  const [selectedLeads, setSelectedLeads] = useState<string[]>(initialData.selectedLeads || []);
+  
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [selectedGroups, setSelectedGroups] = useState<string[]>(initialData.selectedGroups || []);
 
+  // Effect to initialize rowSelection when leads are loaded
+  useEffect(() => {
+    if (leads.length > 0 && initialData.selectedLeads) {
+      const selection: RowSelectionState = {};
+      initialData.selectedLeads.forEach((leadId: string) => {
+        const index = leads.findIndex(l => l.id === leadId);
+        if (index !== -1) {
+          selection[index] = true;
+        }
+      });
+      setRowSelection(selection);
+    }
+  }, [leads, initialData.selectedLeads]);
+
   const handleSubmit = () => {
+    const selectedLeads = Object.keys(rowSelection)
+      .filter(index => rowSelection[index])
+      .map(index => leads[parseInt(index, 10)]?.id)
+      .filter(Boolean); // Filter out any potential undefined IDs
+      
     onNext({ selectedLeads, selectedGroups });
   };
 
@@ -65,7 +85,12 @@ const Step2Leads = ({ onNext, onBack, initialData }: Step2LeadsProps) => {
           {leadsLoading ? (
             <Skeleton className="h-60 w-full" />
           ) : (
-             <DataTable columns={columns} data={leads} />
+             <DataTable 
+               columns={columns} 
+               data={leads} 
+               rowSelection={rowSelection}
+               setRowSelection={setRowSelection}
+             />
           )}
         </TabsContent>
       </Tabs>

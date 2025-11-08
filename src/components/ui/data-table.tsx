@@ -5,6 +5,7 @@ import {
   getCoreRowModel,
   useReactTable,
   getPaginationRowModel,
+  RowSelectionState,
 } from "@tanstack/react-table"
 
 import {
@@ -20,17 +21,33 @@ import { Button } from "./button"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  rowSelection?: RowSelectionState
+  setRowSelection?: React.Dispatch<React.SetStateAction<RowSelectionState>>
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  rowSelection: controlledRowSelection,
+  setRowSelection: setControlledRowSelection,
 }: DataTableProps<TData, TValue>) {
+  const [uncontrolledRowSelection, setUncontrolledRowSelection] = React.useState<RowSelectionState>({})
+
+  const isControlled = controlledRowSelection !== undefined;
+
+  const rowSelection = isControlled ? controlledRowSelection : uncontrolledRowSelection;
+  const onRowSelectionChange = isControlled ? setControlledRowSelection : setUncontrolledRowSelection;
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onRowSelectionChange: onRowSelectionChange!,
+    state: {
+      rowSelection,
+    },
+    enableRowSelection: true,
   })
 
   return (

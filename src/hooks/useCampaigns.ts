@@ -42,7 +42,7 @@ export const useCampaigns = () => {
     fetchCampaigns();
   }, [fetchCampaigns]);
 
-  const createCampaign = async (campaignData: Omit<Campaign, 'id' | 'user_id' | 'created_at' | 'status' | 'agents' | 'lead_count'>, leads: string[], leadGroups: string[]) => {
+  const createCampaign = async (campaignData: Omit<Campaign, 'id' | 'user_id' | 'created_at' | 'agents' | 'lead_count'>, leads: string[], leadGroups: string[]) => {
     if (!user) throw new Error("User not authenticated");
 
     // 1. Create the campaign

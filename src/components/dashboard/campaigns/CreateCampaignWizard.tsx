@@ -42,7 +42,7 @@ const CreateCampaignWizard = ({ isOpen, onClose }: CreateCampaignWizardProps) =>
         const { selectedLeads, selectedGroups } = campaignData;
         
         await createCampaign(
-            { name, agent_id, schedule, pacing, retry_rules },
+            { name, agent_id, schedule, pacing, retry_rules, status: 'Active' },
             selectedLeads,
             selectedGroups
         );

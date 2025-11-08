@@ -70,7 +70,10 @@ const Step4Summary = ({ onSubmit, onBack, data, loading }: Step4SummaryProps) =>
           <SummaryItem label="Campaign Name" value={data.name} />
           <SummaryItem label="Agent" value={selectedAgent?.name} />
           <SummaryItem label="Total Unique Leads" value={totalLeads.size} />
-          <SummaryItem label="Schedule" value={`${data.schedule.start_time} - ${data.schedule.end_time} on ${data.schedule.weekdays.join(', ')}`} />
+          <SummaryItem 
+            label="Schedule" 
+            value={`${data.schedule.start_time} - ${data.schedule.end_time} (${data.schedule.timezone || 'N/A'}) on ${data.schedule.weekdays.join(', ')}`} 
+          />
           <SummaryItem label="Pacing" value={`${data.pacing.max_concurrent_calls} concurrent calls, ${data.pacing.gap_minutes} min gap`} />
         </CardContent>
       </Card>
@@ -88,7 +91,7 @@ const Step4Summary = ({ onSubmit, onBack, data, loading }: Step4SummaryProps) =>
 const SummaryItem = ({ label, value }: { label: string, value: any }) => (
   <div className="flex justify-between text-sm">
     <span className="text-muted-foreground">{label}</span>
-    <span className="font-medium">{value || '-'}</span>
+    <span className="font-medium text-right">{value || '-'}</span>
   </div>
 );
 
